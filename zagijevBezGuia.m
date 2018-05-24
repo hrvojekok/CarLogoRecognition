@@ -3,9 +3,8 @@ clc;
 clear all;
 close all;
 
-J = imread('audi_3.png');
+J = imread('opel_8.png');
 
-imshow(J);
 Igray = rgb2gray(J); %(Convert an Image to Gray)
 [rows cols] = size(Igray);
 Idilate = Igray; %% Dilate and Erode Image in order to remove noise
@@ -49,13 +48,13 @@ end
 total_sum = total_sum + sum;
 end
 average = total_sum / cols;
-figure(4);
-% Plot the Histogram for analysis
-subplot(3,1,1);
-plot (horz1);
-title('Horizontal Edge Processing Histogram');
-xlabel('Column Number ->');
-ylabel('Difference ->');
+% figure(4);
+% % Plot the Histogram for analysis
+% subplot(3,1,1);
+% plot (horz1);
+% title('Horizontal Edge Processing Histogram');
+% xlabel('Column Number ->');
+% ylabel('Difference ->');
 %% Smoothen the Horizontal Histogram by applying Low Pass Filter
 sum = 0;
 horz = horz1;
@@ -66,11 +65,11 @@ sum = sum + horz1(j);
 end
 horz(i) = sum / 41;
 end
-subplot(3,1,2);
-plot (horz);
-title('Histogram after passing through Low Pass Filter');
-xlabel('Column Number ->');
-ylabel('Difference ->');
+% subplot(3,1,2);
+% plot (horz);
+% title('Histogram after passing through Low Pass Filter');
+% xlabel('Column Number ->');
+% ylabel('Difference ->');
 %% Filter out Horizontal Histogram Values by applying Dynamic Threshold
 disp('Filter out Horizontal Histogram...');
 for i = 1:cols
@@ -81,11 +80,11 @@ I(j, i) = 0;
 end
 end
 end
-subplot(3,1,3);
-plot (horz);
-title('Histogram after Filtering');
-xlabel('Column Number ->');
-ylabel('Difference ->');
+% subplot(3,1,3);
+% plot (horz);
+% title('Histogram after Filtering');
+% xlabel('Column Number ->');
+% ylabel('Difference ->');
 %% PROCESS EDGES IN VERTICAL DIRECTION
 difference = 0;
 total_sum = 0;
@@ -115,12 +114,12 @@ end
 total_sum = total_sum + sum;
 end
 average = total_sum / rows;
-figure(5)
-subplot(2,1,1);
-plot (vert1);
-title('Vertical Edge Processing Histogram');
-xlabel('Row Number ->');
-ylabel('Difference ->');
+% figure(5)
+% subplot(2,1,1);
+% plot (vert1);
+% title('Vertical Edge Processing Histogram');
+% xlabel('Row Number ->');
+% ylabel('Difference ->');
 %% Smoothen the Vertical Histogram by applying Low Pass Filter
 disp('Passing Vertical Histogram through Low Pass Filter...');
 sum = 0;
@@ -132,11 +131,11 @@ sum = sum + vert1(j);
 end
 vert(i) = sum / 41;
 end
-subplot(2,1,2);
-plot (vert);
-title('Histogram after passing through Low Pass Filter');
-xlabel('Row Number ->');
-ylabel('Difference ->');
+% subplot(2,1,2);
+% plot (vert);
+% title('Histogram after passing through Low Pass Filter');
+% xlabel('Row Number ->');
+% ylabel('Difference ->');
 %% Filter out Vertical Histogram Values by applying Dynamic Threshold
 disp('Filter out Vertical Histogram...');
 for i = 1:rows
@@ -148,11 +147,11 @@ end
 end
 end
 % subplot(3,1,3);
-figure;
-plot (vert);
-title('Histogram after Filtering');
-xlabel('Row Number ->');
-ylabel('Difference ->');
+% figure;
+% plot (vert);
+% title('Histogram after Filtering');
+% xlabel('Row Number ->');
+% ylabel('Difference ->');
 
 %% Find Probable candidates for Number Plate
 j = 1;
@@ -206,7 +205,7 @@ end
 end
 end
 end
-imshow(I);
+%  imshow(I);
 x=1;
 y=1;
 for x=1:rows
@@ -221,8 +220,8 @@ for x=1:rows
     
    end
 end
-pikselix(pikselix==0)=NaN;
-pikseliy(pikseliy==0)=NaN;
+pikselix(pikselix==0)=0;
+pikseliy(pikseliy==0)=0;
 minx=min(pikselix);
 miny=min(pikseliy);
 
@@ -240,11 +239,19 @@ widthDivide=widthDivide/3.5;
 
 znaky=miny+widthDivide;
 rect=[znaky, znakx, width,height];
+
 % I = imread(fullfile(Path_Name, File_Name));
+%I = imread('opel_8.png');
 
-F=imcrop(J,rect);
+% figure(7), imshow(J);
+% F=imcrop(J,rect);
 
-figure(8),imshow(F);
+
+% K = rgb2gray(J);
+% F = imcrop(K,rect);
+
+
+%  figure(8),imshow(F);
 
 
 
@@ -272,34 +279,45 @@ figure(8),imshow(F);
 % end
 %######################################################################
 originalLogo = imread('opelLogo.jpg') ;
-logoImage = rgb2gray(originalLogo);
-figure;
-imshow(logoImage);
+ logoImage = rgb2gray(originalLogo);
+% figure;
+% imshow(F);
 
-title('Image of a Pads box');
+% title('Image of a Pads box');
+
+[rows, columns, numberOfColorChannels] = size(originalLogo);
+if numberOfColorChannels > 1
+        carImage = rgb2gray(J);
+else
+    % It's already gray scale.  No need to convert.
+    carImage = J;
+end
+
+    F=imcrop(J,rect);
 
 
-carImage=rgb2gray(F);
-figure;
-imshow(carImage);
-title('Image of a Cluttered desk scene');
+% carImage = F;
+% carImage=rgb2gray(F);
+% figure;
+% imshow(carImage);
+% title('Image of a Cluttered desk scene');
 
 
 logoBoxPoints = detectSURFFeatures(logoImage);
 carBoxPoints = detectSURFFeatures(carImage);
 
-figure;
-imshow(logoImage);
-title('50 Strongest Feature Points from the Pads box Image');
-hold on;
-
-plot(selectStrongest(logoBoxPoints, 400));
-
-figure;
-imshow(carImage);
-title('400 Strongest Feature Points from Scene Image');
-hold on;
-plot(selectStrongest(carBoxPoints, 400));
+% figure;
+% imshow(logoImage);
+% title('50 Strongest Feature Points from the Pads box Image');
+% hold on;
+% 
+% plot(selectStrongest(logoBoxPoints, 400));
+% 
+% figure;
+% imshow(carImage);
+% title('400 Strongest Feature Points from Scene Image');
+% hold on;
+% plot(selectStrongest(carBoxPoints, 400));
 
 
 [carboxFeatures, carboxPoints] = extractFeatures(logoImage, logoBoxPoints); %caboxFeatures su Feature vektori tj. deskriptori a carboxPoints su njihove lokacije
@@ -331,10 +349,11 @@ for i=1:m
   
 
  
-averageDistanceOpel=mean2(EUD_OPEL);
 averageDistance=0.86355/3.5;
 p=1;
 s=1;
+
+
 
 for i=1:m
     for k=1:g
@@ -359,33 +378,40 @@ end
 %#############################################################
 originalLogo = imread('audiRealLogo.jpg') ;
 logoImage = rgb2gray(originalLogo);
-figure;
-imshow(logoImage);
+% figure;
+% imshow(logoImage);
 
-title('Image of a Pads box');
+% title('Image of a Pads box');
 
+[rows, columns, numberOfColorChannels] = size(originalLogo);
+if numberOfColorChannels > 1
+        carImage = rgb2gray(J);
+else
+    % It's already gray scale.  No need to convert.
+    carImage = J;
+end
 
-carImage=rgb2gray(F);
-figure;
-imshow(carImage);
-title('Image of a Cluttered desk scene');
+    F=imcrop(J,rect);
+% figure;
+% imshow(carImage);
+% title('Image of a Cluttered desk scene');
 
 
 logoBoxPoints = detectSURFFeatures(logoImage);
 carBoxPoints = detectSURFFeatures(carImage);
 
-figure;
-imshow(logoImage);
-title('50 Strongest Feature Points from the Pads box Image');
-hold on;
-
-plot(selectStrongest(logoBoxPoints, 400));
-
-figure;
-imshow(carImage);
-title('400 Strongest Feature Points from Scene Image');
-hold on;
-plot(selectStrongest(carBoxPoints, 400));
+% figure;
+% imshow(logoImage);
+% title('50 Strongest Feature Points from the Pads box Image');
+% hold on;
+% 
+% plot(selectStrongest(logoBoxPoints, 400));
+% 
+% figure;
+% imshow(carImage);
+% title('400 Strongest Feature Points from Scene Image');
+% hold on;
+% plot(selectStrongest(carBoxPoints, 400));
 
 
 [carboxFeatures, carboxPoints] = extractFeatures(logoImage, logoBoxPoints); %caboxFeatures su Feature vektori tj. deskriptori a carboxPoints su njihove lokacije
@@ -417,8 +443,10 @@ for i=1:m
   
 
  
-averageDistanceAudi=mean2(EUD_AUDI);
+averageDistance=mean2(EUD_AUDI);
 averageDistance=0.86355/3.5;
+
+
 p=1;
 s=1;
 
@@ -440,38 +468,48 @@ end
 
 
 
+
+
+
     
     pairedDotAUDI=size(boxPairsAudi,1);
-%############################################################################
-originalLogo = imread('skodaLogo.jpg') ;
+%################################################################
+originalLogo = imread('skodaRealLogo.jpg') ;
 logoImage = rgb2gray(originalLogo);
-figure;
-imshow(logoImage);
+% figure;
+%  imshow(logoImage);
 
-title('Image of a Pads box');
+% title('Image of a Pads box');
 
+[rows, columns, numberOfColorChannels] = size(originalLogo);
+if numberOfColorChannels > 1
+        carImage = rgb2gray(J);
+else
+    % It's already gray scale.  No need to convert.
+    carImage = J;
+end
 
-carImage=rgb2gray(F);
-figure;
-imshow(carImage);
-title('Image of a Cluttered desk scene');
+    F=imcrop(J,rect);
+% figure;
+% imshow(carImage);
+% title('Image of a Cluttered desk scene');
 
 
 logoBoxPoints = detectSURFFeatures(logoImage);
 carBoxPoints = detectSURFFeatures(carImage);
 
-figure;
-imshow(logoImage);
-title('50 Strongest Feature Points from the Pads box Image');
-hold on;
-
-plot(selectStrongest(logoBoxPoints, 400));
-
-figure;
-imshow(carImage);
-title('400 Strongest Feature Points from Scene Image');
-hold on;
-plot(selectStrongest(carBoxPoints, 400));
+% figure;
+% imshow(logoImage);
+% title('50 Strongest Feature Points from the Pads box Image');
+% hold on;
+% 
+% plot(selectStrongest(logoBoxPoints, 400));
+% 
+% figure;
+% imshow(carImage);
+% title('400 Strongest Feature Points from Scene Image');
+% hold on;
+% plot(selectStrongest(carBoxPoints, 400));
 
 
 [carboxFeatures, carboxPoints] = extractFeatures(logoImage, logoBoxPoints); %caboxFeatures su Feature vektori tj. deskriptori a carboxPoints su njihove lokacije
@@ -503,8 +541,9 @@ for i=1:m
   
 
  
-averageDistanceSkoda=mean2(EUD_SKODA);
+averageDistance=mean2(EUD_SKODA);
 averageDistance=0.86355/3.5;
+
 p=1;
 s=1;
 
@@ -526,38 +565,46 @@ end
 
 
 
+
+
     
     pairedDotSKODA=size(boxPairsSkoda,1);
 %#######################################################################
 originalLogo = imread('vwLogo.jpg') ;
 logoImage = rgb2gray(originalLogo);
-figure;
-imshow(logoImage);
+% figure;
+% imshow(logoImage);
 
-title('Image of a Pads box');
+% title('Image of a Pads box');
+[rows, columns, numberOfColorChannels] = size(originalLogo);
+if numberOfColorChannels > 1
+        carImage = rgb2gray(J);
+else
+    % It's already gray scale.  No need to convert.
+    carImage = J;
+end
 
-
-carImage=rgb2gray(F);
-figure;
-imshow(carImage);
-title('Image of a Cluttered desk scene');
+    F=imcrop(J,rect);
+% figure;
+% imshow(carImage);
+% title('Image of a Cluttered desk scene');
 
 
 logoBoxPoints = detectSURFFeatures(logoImage);
 carBoxPoints = detectSURFFeatures(carImage);
 
-figure;
-imshow(logoImage);
-title('50 Strongest Feature Points from the Pads box Image');
-hold on;
-
-plot(selectStrongest(logoBoxPoints, 400));
-
-figure;
-imshow(carImage);
-title('400 Strongest Feature Points from Scene Image');
-hold on;
-plot(selectStrongest(carBoxPoints, 400));
+% figure;
+% imshow(logoImage);
+% title('50 Strongest Feature Points from the Pads box Image');
+% hold on;
+% 
+% plot(selectStrongest(logoBoxPoints, 400));
+% 
+% figure;
+% imshow(carImage);
+% title('400 Strongest Feature Points from Scene Image');
+% hold on;
+% plot(selectStrongest(carBoxPoints, 400));
 
 
 [carboxFeatures, carboxPoints] = extractFeatures(logoImage, logoBoxPoints); %caboxFeatures su Feature vektori tj. deskriptori a carboxPoints su njihove lokacije
@@ -589,10 +636,11 @@ for i=1:m
   
 
  
-averageDistanceVW=mean2(EUD_VW);
+averageDistance=mean2(EUD_VW);
 averageDistance=0.86355/3.5;
 p=1;
 s=1;
+
 
 for i=1:m
     for k=1:g
@@ -612,42 +660,632 @@ end
 
 
 
+
+
     
     pairedDotVW=size(boxPairsVW,1);
 %#######################################################################
 
+%##############################################CITROEN#########################
+originalLogo = imread('citroenRealLogo.jpg') ;
+logoImage = rgb2gray(originalLogo);
+% figure;
+% imshow(logoImage);
+
+% title('Image of a Pads box');
+
+[rows, columns, numberOfColorChannels] = size(originalLogo);
+if numberOfColorChannels > 1
+        carImage = rgb2gray(J);
+else
+    % It's already gray scale.  No need to convert.
+    carImage = J;
+end
+
+    F=imcrop(J,rect);
+% figure;
+% imshow(carImage);
+% title('Image of a Cluttered desk scene');
+
+
+logoBoxPoints = detectSURFFeatures(logoImage);
+carBoxPoints = detectSURFFeatures(carImage);
+
+% figure;
+% imshow(logoImage);
+% title('50 Strongest Feature Points from the Pads box Image');
+% hold on;
+% 
+% plot(selectStrongest(logoBoxPoints, 400));
+% 
+% figure;
+% imshow(carImage);
+% title('400 Strongest Feature Points from Scene Image');
+% hold on;
+% plot(selectStrongest(carBoxPoints, 400));
+
+
+[carboxFeatures, carboxPoints] = extractFeatures(logoImage, logoBoxPoints); %caboxFeatures su Feature vektori tj. deskriptori a carboxPoints su njihove lokacije
+                                                                            %logoImage je slika a logoBoxPoints njezini SURFPoints
+[carFeatures, carBoxPoints] = extractFeatures(carImage, carBoxPoints);
+
+[m n]=size(carboxFeatures);
+[g h]=size(carFeatures);
+
+for i=1:m
+    for k=1:g
+        euclid=0;
+         for j=1:n
+       
+        
+             
+           
+           euclid=euclid+(carboxFeatures(i,j)-carFeatures(k,j))^2;
+             EUD_CITROEN(i,k)=sqrt(euclid);
+         end
+             
+           
+     end
+        
+       
+        
+        
+ end
+  
+
+ 
+averageDistance=mean2(EUD_CITROEN);
+averageDistance=0.86355/3.5;
+p=1;
+s=1;
+
+for i=1:m
+    for k=1:g
+        
+        if(EUD_CITROEN(i,k)<averageDistance)
+           
+          boxPairsCitroen(s,p)=i;
+          boxPairsCitroen(s,p+1)=k;
+          s=s+1;
+           
+        end
+       
+        
+    end
+end
+
+
+
+
+
+
+    
+    pairedDotCitroen=size(boxPairsCitroen,1);
+
+%###############################################################FiAT########
+originalLogo = imread('fiatRealLogo.jpg') ;
+logoImage = rgb2gray(originalLogo);
+% figure;
+% imshow(logoImage);
+
+% title('Image of a Pads box');
+
+[rows, columns, numberOfColorChannels] = size(originalLogo);
+if numberOfColorChannels > 1
+        carImage = rgb2gray(J);
+else
+    % It's already gray scale.  No need to convert.
+    carImage = J;
+end
+
+    F=imcrop(J,rect);
+% figure;
+% imshow(carImage);
+% title('Image of a Cluttered desk scene');
+
+
+logoBoxPoints = detectSURFFeatures(logoImage);
+carBoxPoints = detectSURFFeatures(carImage);
+
+% figure;
+% imshow(logoImage);
+% title('50 Strongest Feature Points from the Pads box Image');
+% hold on;
+% 
+% plot(selectStrongest(logoBoxPoints, 400));
+% 
+% figure;
+% imshow(carImage);
+% title('400 Strongest Feature Points from Scene Image');
+% hold on;
+% plot(selectStrongest(carBoxPoints, 400));
+
+
+[carboxFeatures, carboxPoints] = extractFeatures(logoImage, logoBoxPoints); %caboxFeatures su Feature vektori tj. deskriptori a carboxPoints su njihove lokacije
+                                                                            %logoImage je slika a logoBoxPoints njezini SURFPoints
+[carFeatures, carBoxPoints] = extractFeatures(carImage, carBoxPoints);
+
+[m n]=size(carboxFeatures);
+[g h]=size(carFeatures);
+
+for i=1:m
+    for k=1:g
+        euclid=0;
+         for j=1:n
+       
+        
+             
+           
+           euclid=euclid+(carboxFeatures(i,j)-carFeatures(k,j))^2;
+             EUD_Fiat(i,k)=sqrt(euclid);
+         end
+             
+           
+     end
+        
+       
+        
+        
+ end
+  
+
+ 
+averageDistance=mean2(EUD_Fiat);
+averageDistance=0.86355/3.5;
+p=1;
+s=1;
+
+for i=1:m
+    for k=1:g
+        
+        if(EUD_Fiat(i,k)<averageDistance)
+           
+          boxPairsFiat(s,p)=i;
+          boxPairsFiat(s,p+1)=k;
+          s=s+1;
+           
+        end
+       
+        
+    end
+end
+
+
+
+
+
+
+    
+    pairedDotFiat=size(boxPairsFiat,1);
+%#######################################################################
+originalLogo = imread('mazdaRealLogo.jpg') ;
+logoImage = rgb2gray(originalLogo);
+% figure;
+% imshow(logoImage);
+
+% title('Image of a Pads box');
+[rows, columns, numberOfColorChannels] = size(originalLogo);
+if numberOfColorChannels > 1
+        carImage = rgb2gray(J);
+else
+    % It's already gray scale.  No need to convert.
+    carImage = J;
+end
+
+    F=imcrop(J,rect);
+% figure;
+% imshow(carImage);
+% title('Image of a Cluttered desk scene');
+
+
+logoBoxPoints = detectSURFFeatures(logoImage);
+carBoxPoints = detectSURFFeatures(carImage);
+
+% figure;
+% imshow(logoImage);
+% title('50 Strongest Feature Points from the Pads box Image');
+% hold on;
+% 
+% plot(selectStrongest(logoBoxPoints, 400));
+% 
+% figure;
+% imshow(carImage);
+% title('400 Strongest Feature Points from Scene Image');
+% hold on;
+% plot(selectStrongest(carBoxPoints, 400));
+
+
+[carboxFeatures, carboxPoints] = extractFeatures(logoImage, logoBoxPoints); %caboxFeatures su Feature vektori tj. deskriptori a carboxPoints su njihove lokacije
+                                                                            %logoImage je slika a logoBoxPoints njezini SURFPoints
+[carFeatures, carBoxPoints] = extractFeatures(carImage, carBoxPoints);
+
+[m n]=size(carboxFeatures);
+[g h]=size(carFeatures);
+
+for i=1:m
+    for k=1:g
+        euclid=0;
+         for j=1:n
+       
+        
+             
+           
+           euclid=euclid+(carboxFeatures(i,j)-carFeatures(k,j))^2;
+             EUD_Mazda(i,k)=sqrt(euclid);
+         end
+             
+           
+     end
+        
+       
+        
+        
+ end
+  
+
+ 
+averageDistance=mean2(EUD_Mazda);
+averageDistance=0.86355/3.5;
+p=1;
+s=1;
+
+for i=1:m
+    for k=1:g
+        
+        if(EUD_Mazda(i,k)<averageDistance)
+           
+          boxPairsMazda(s,p)=i;
+          boxPairsMazda(s,p+1)=k;
+          s=s+1;
+           
+        end
+       
+        
+    end
+end
+
+
+
+
+
+
+    
+    pairedDotMazda=size(boxPairsMazda,1);
+    
+    
+    %#######################################################################
+originalLogo = imread('nissanRealLogo.jpg') ;
+logoImage = rgb2gray(originalLogo);
+% figure;
+% imshow(logoImage);
+
+% title('Image of a Pads box');
+[rows, columns, numberOfColorChannels] = size(originalLogo);
+if numberOfColorChannels > 1
+        carImage = rgb2gray(J);
+else
+    % It's already gray scale.  No need to convert.
+    carImage = J;
+end
+
+    F=imcrop(J,rect);
+% figure;
+% imshow(carImage);
+% title('Image of a Cluttered desk scene');
+
+
+logoBoxPoints = detectSURFFeatures(logoImage);
+carBoxPoints = detectSURFFeatures(carImage);
+
+% figure;
+% imshow(logoImage);
+% title('50 Strongest Feature Points from the Pads box Image');
+% hold on;
+% 
+% plot(selectStrongest(logoBoxPoints, 400));
+% 
+% figure;
+% imshow(carImage);
+% title('400 Strongest Feature Points from Scene Image');
+% hold on;
+% plot(selectStrongest(carBoxPoints, 400));
+
+
+[carboxFeatures, carboxPoints] = extractFeatures(logoImage, logoBoxPoints); %caboxFeatures su Feature vektori tj. deskriptori a carboxPoints su njihove lokacije
+                                                                            %logoImage je slika a logoBoxPoints njezini SURFPoints
+[carFeatures, carBoxPoints] = extractFeatures(carImage, carBoxPoints);
+
+[m n]=size(carboxFeatures);
+[g h]=size(carFeatures);
+
+for i=1:m
+    for k=1:g
+        euclid=0;
+         for j=1:n
+       
+        
+             
+           
+           euclid=euclid+(carboxFeatures(i,j)-carFeatures(k,j))^2;
+             EUD_Nissan(i,k)=sqrt(euclid);
+         end
+             
+           
+     end
+        
+       
+        
+        
+ end
+  
+
+ 
+averageDistance=mean2(EUD_Nissan);
+averageDistance=0.86355/3.5;
+p=1;
+s=1;
+
+for i=1:m
+    for k=1:g
+        
+        if(EUD_Nissan(i,k)<averageDistance)
+           
+          boxPairsNissan(s,p)=i;
+          boxPairsNissan(s,p+1)=k;
+          s=s+1;
+           
+        end
+       
+        
+    end
+end
+
+
+
+
+
+
+    
+    pairedDotNissan=size(boxPairsNissan,1);
+    
+    %#######################################################################
+originalLogo = imread('renaultRealLogo.jpg') ;
+logoImage = rgb2gray(originalLogo);
+% figure;
+% imshow(logoImage);
+
+% title('Image of a Pads box');
+
+[rows, columns, numberOfColorChannels] = size(originalLogo);
+if numberOfColorChannels > 1
+        carImage = rgb2gray(J);
+else
+    % It's already gray scale.  No need to convert.
+    carImage = J;
+end
+
+    F=imcrop(J,rect);
+% figure;
+% imshow(carImage);
+% title('Image of a Cluttered desk scene');
+
+
+logoBoxPoints = detectSURFFeatures(logoImage);
+carBoxPoints = detectSURFFeatures(carImage);
+
+% figure;
+% imshow(logoImage);
+% title('50 Strongest Feature Points from the Pads box Image');
+% hold on;
+% 
+% plot(selectStrongest(logoBoxPoints, 400));
+% 
+% figure;
+% imshow(carImage);
+% title('400 Strongest Feature Points from Scene Image');
+% hold on;
+% plot(selectStrongest(carBoxPoints, 400));
+
+
+[carboxFeatures, carboxPoints] = extractFeatures(logoImage, logoBoxPoints); %caboxFeatures su Feature vektori tj. deskriptori a carboxPoints su njihove lokacije
+                                                                            %logoImage je slika a logoBoxPoints njezini SURFPoints
+[carFeatures, carBoxPoints] = extractFeatures(carImage, carBoxPoints);
+
+[m n]=size(carboxFeatures);
+[g h]=size(carFeatures);
+
+for i=1:m
+    for k=1:g
+        euclid=0;
+         for j=1:n
+       
+        
+             
+           
+           euclid=euclid+(carboxFeatures(i,j)-carFeatures(k,j))^2;
+             EUD_Renault(i,k)=sqrt(euclid);
+         end
+             
+           
+     end
+        
+       
+        
+        
+ end
+  
+
+ 
+averageDistance=mean2(EUD_Renault);
+averageDistance=0.86355/3.5;
+
+p=1;
+s=1;
+
+for i=1:m
+    for k=1:g
+        
+        if(EUD_Renault(i,k)<averageDistance)
+           
+          boxPairsRenault(s,p)=i;
+          boxPairsRenault(s,p+1)=k;
+          s=s+1;
+           
+        end
+       
+        
+    end
+end
+
+
+
+
+
+
+    
+    pairedDotRenault=size(boxPairsRenault,1);
+    
+    %#######################################################################
+originalLogo = imread('toyotaRealLogo.jpg') ;
+logoImage = rgb2gray(originalLogo);
+% figure;
+% imshow(logoImage);
+
+% title('Image of a Pads box');
+[rows, columns, numberOfColorChannels] = size(originalLogo);
+if numberOfColorChannels > 1
+        carImage = rgb2gray(J);
+else
+    % It's already gray scale.  No need to convert.
+    carImage = J;
+end
+
+    F=imcrop(J,rect);
+% figure;
+% imshow(carImage);
+% title('Image of a Cluttered desk scene');
+
+
+logoBoxPoints = detectSURFFeatures(logoImage);
+carBoxPoints = detectSURFFeatures(carImage);
+
+% figure;
+% imshow(logoImage);
+% title('50 Strongest Feature Points from the Pads box Image');
+% hold on;
+% 
+% plot(selectStrongest(logoBoxPoints, 400));
+% 
+% figure;
+% imshow(carImage);
+% title('400 Strongest Feature Points from Scene Image');
+% hold on;
+% plot(selectStrongest(carBoxPoints, 400));
+
+
+[carboxFeatures, carboxPoints] = extractFeatures(logoImage, logoBoxPoints); %caboxFeatures su Feature vektori tj. deskriptori a carboxPoints su njihove lokacije
+                                                                            %logoImage je slika a logoBoxPoints njezini SURFPoints
+[carFeatures, carBoxPoints] = extractFeatures(carImage, carBoxPoints);
+
+[m n]=size(carboxFeatures);
+[g h]=size(carFeatures);
+
+for i=1:m
+    for k=1:g
+        euclid=0;
+         for j=1:n
+       
+        
+             
+           
+           euclid=euclid+(carboxFeatures(i,j)-carFeatures(k,j))^2;
+             EUD_Toyota(i,k)=sqrt(euclid);
+         end
+             
+           
+     end
+        
+       
+        
+        
+ end
+  
+
+ 
+averageDistance=mean2(EUD_Toyota);
+averageDistance=0.86355/3.5;
+
+p=1;
+s=1;
+
+for i=1:m
+    for k=1:g
+        
+        if(EUD_Toyota(i,k)<averageDistance)
+           
+          boxPairsToyota(s,p)=i;
+          boxPairsToyota(s,p+1)=k;
+          s=s+1;
+           
+        end
+       
+        
+    end
+end
+
+
+
+
+
+
+    
+    pairedDotToyota=size(boxPairsToyota,1);
+% averageBoxPairsOpel = mean2(boxPairsOpel);
+% averageBoxPairsAudi = mean2(boxPairsAudi);
+% averageBoxPairsSkoda = mean2(boxPairsSkoda
+
+
+
 maxNumberOfPairedDots1 = max(pairedDotOPEL, pairedDotAUDI);
 maxNumberOfPairedDots2 = max(pairedDotSKODA, pairedDotVW);
-handles.maxMax = max(maxNumberOfPairedDots1, maxNumberOfPairedDots2);
+maxNumberOfPairedDots3 = max(pairedDotCitroen, pairedDotFiat);
+maxNumberOfPairedDots4 = max(pairedDotMazda, pairedDotNissan);
+maxNumberOfPairedDots5 = max(pairedDotRenault, pairedDotToyota);
+
+handles.maxMax1 = max(maxNumberOfPairedDots1, maxNumberOfPairedDots2);
+handles.maxMax2 = max(maxNumberOfPairedDots3, maxNumberOfPairedDots4);
+handles.maxMax3 = max(handles.maxMax1, handles.maxMax2);
+handles.maxMax4 = max(maxNumberOfPairedDots5, handles.maxMax3);
 
 
-if handles.maxMax == pairedDotOPEL
+if handles.maxMax4 == pairedDotOPEL
     f = msgbox('Opel');
 else end
-if handles.maxMax == pairedDotAUDI
+if handles.maxMax4 == pairedDotAUDI
     f = msgbox('Audi');
 else end
-if handles.maxMax == pairedDotSKODA
+if handles.maxMax4 == pairedDotSKODA
     f = msgbox('Škoda');
 else end
- if handles.maxMax == pairedDotVW
+ if handles.maxMax4 == pairedDotVW
     f = msgbox('Volkswagen');
  else end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+ if handles.maxMax4 == pairedDotCitroen
+    f = msgbox('Citroen');
+else end
+if handles.maxMax4 == pairedDotFiat
+    f = msgbox('Fiat');
+else end
+if handles.maxMax4 == pairedDotMazda
+    f = msgbox('Mazda');
+else end
+if handles.maxMax4 == pairedDotNissan
+    f = msgbox('Nissan');
+else end
+if handles.maxMax4 == pairedDotRenault
+    f = msgbox('Renault');
+else end
+if handles.maxMax4 == pairedDotToyota
+    f = msgbox('Toyota');
+else end
 

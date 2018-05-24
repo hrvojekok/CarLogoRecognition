@@ -322,7 +322,12 @@ rect=[znaky, znakx, width,height];
 %I = imread('opel_8.png');
 
 % figure(7), imshow(J);
-F=imcrop(J,rect);
+% F=imcrop(J,rect);
+
+
+% K = rgb2gray(J);
+% F = imcrop(K,rect);
+
 
 %  figure(8),imshow(F);
 
@@ -360,12 +365,16 @@ originalLogo = imread('opelLogo.jpg') ;
 
 [rows, columns, numberOfColorChannels] = size(originalLogo);
 if numberOfColorChannels > 1
-        carImage = rgb2gray(originalLogo);
+        carImage = rgb2gray(J);
 else
     % It's already gray scale.  No need to convert.
-    carImage = originalLogo;
+    carImage = J;
 end
-    
+
+    F=imcrop(J,rect);
+
+
+% carImage = F;
 % carImage=rgb2gray(F);
 % figure;
 % imshow(carImage);
@@ -454,11 +463,13 @@ logoImage = rgb2gray(originalLogo);
 
 [rows, columns, numberOfColorChannels] = size(originalLogo);
 if numberOfColorChannels > 1
-        carImage = rgb2gray(originalLogo);
+        carImage = rgb2gray(J);
 else
     % It's already gray scale.  No need to convert.
-    carImage = originalLogo;
+    carImage = J;
 end
+
+    F=imcrop(J,rect);
 % figure;
 % imshow(carImage);
 % title('Image of a Cluttered desk scene');
@@ -550,11 +561,13 @@ logoImage = rgb2gray(originalLogo);
 
 [rows, columns, numberOfColorChannels] = size(originalLogo);
 if numberOfColorChannels > 1
-        carImage = rgb2gray(originalLogo);
+        carImage = rgb2gray(J);
 else
     % It's already gray scale.  No need to convert.
-    carImage = originalLogo;
+    carImage = J;
 end
+
+    F=imcrop(J,rect);
 % figure;
 % imshow(carImage);
 % title('Image of a Cluttered desk scene');
@@ -641,14 +654,15 @@ logoImage = rgb2gray(originalLogo);
 % imshow(logoImage);
 
 % title('Image of a Pads box');
-
 [rows, columns, numberOfColorChannels] = size(originalLogo);
 if numberOfColorChannels > 1
-        carImage = rgb2gray(originalLogo);
+        carImage = rgb2gray(J);
 else
     % It's already gray scale.  No need to convert.
-    carImage = originalLogo;
+    carImage = J;
 end
+
+    F=imcrop(J,rect);
 % figure;
 % imshow(carImage);
 % title('Image of a Cluttered desk scene');
@@ -740,11 +754,13 @@ logoImage = rgb2gray(originalLogo);
 
 [rows, columns, numberOfColorChannels] = size(originalLogo);
 if numberOfColorChannels > 1
-        carImage = rgb2gray(originalLogo);
+        carImage = rgb2gray(J);
 else
     % It's already gray scale.  No need to convert.
-    carImage = originalLogo;
+    carImage = J;
 end
+
+    F=imcrop(J,rect);
 % figure;
 % imshow(carImage);
 % title('Image of a Cluttered desk scene');
@@ -834,11 +850,13 @@ logoImage = rgb2gray(originalLogo);
 
 [rows, columns, numberOfColorChannels] = size(originalLogo);
 if numberOfColorChannels > 1
-        carImage = rgb2gray(originalLogo);
+        carImage = rgb2gray(J);
 else
     % It's already gray scale.  No need to convert.
-    carImage = originalLogo;
+    carImage = J;
 end
+
+    F=imcrop(J,rect);
 % figure;
 % imshow(carImage);
 % title('Image of a Cluttered desk scene');
@@ -924,14 +942,15 @@ logoImage = rgb2gray(originalLogo);
 % imshow(logoImage);
 
 % title('Image of a Pads box');
-
 [rows, columns, numberOfColorChannels] = size(originalLogo);
 if numberOfColorChannels > 1
-        carImage = rgb2gray(originalLogo);
+        carImage = rgb2gray(J);
 else
     % It's already gray scale.  No need to convert.
-    carImage = originalLogo;
+    carImage = J;
 end
+
+    F=imcrop(J,rect);
 % figure;
 % imshow(carImage);
 % title('Image of a Cluttered desk scene');
@@ -1019,14 +1038,15 @@ logoImage = rgb2gray(originalLogo);
 % imshow(logoImage);
 
 % title('Image of a Pads box');
-
 [rows, columns, numberOfColorChannels] = size(originalLogo);
 if numberOfColorChannels > 1
-        carImage = rgb2gray(originalLogo);
+        carImage = rgb2gray(J);
 else
     % It's already gray scale.  No need to convert.
-    carImage = originalLogo;
+    carImage = J;
 end
+
+    F=imcrop(J,rect);
 % figure;
 % imshow(carImage);
 % title('Image of a Cluttered desk scene');
@@ -1116,11 +1136,13 @@ logoImage = rgb2gray(originalLogo);
 
 [rows, columns, numberOfColorChannels] = size(originalLogo);
 if numberOfColorChannels > 1
-        carImage = rgb2gray(originalLogo);
+        carImage = rgb2gray(J);
 else
     % It's already gray scale.  No need to convert.
-    carImage = originalLogo;
+    carImage = J;
 end
+
+    F=imcrop(J,rect);
 % figure;
 % imshow(carImage);
 % title('Image of a Cluttered desk scene');
@@ -1208,14 +1230,15 @@ logoImage = rgb2gray(originalLogo);
 % imshow(logoImage);
 
 % title('Image of a Pads box');
-
 [rows, columns, numberOfColorChannels] = size(originalLogo);
 if numberOfColorChannels > 1
-        carImage = rgb2gray(originalLogo);
+        carImage = rgb2gray(J);
 else
     % It's already gray scale.  No need to convert.
-    carImage = originalLogo;
+    carImage = J;
 end
+
+    F=imcrop(J,rect);
 % figure;
 % imshow(carImage);
 % title('Image of a Cluttered desk scene');
